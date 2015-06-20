@@ -3,6 +3,7 @@
 
 target 'TwitterDemo' do
 pod 'STTwitter', '~> 0.2.1'
+pod 'SDWebImage', '~> 3.7.2'
 end
 
 target 'TwitterDemoTests' do

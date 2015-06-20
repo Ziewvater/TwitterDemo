@@ -25,7 +25,10 @@ NSString * const ZWVUserProfileImageURL = @"profile_image_url";
         self.screenName = jsonDict[ZWVUserScreenName];
     }
     if (jsonDict[ZWVUserProfileImageURL]) {
-        self.profileImageUrl = jsonDict[ZWVUserProfileImageURL];
+        // The normal image size is too small, replace "_normal" with "_bigger"
+        NSString *normalImageString = jsonDict[ZWVUserProfileImageURL];
+        NSString *newString = [normalImageString stringByReplacingOccurrencesOfString:@"_normal" withString:@"_bigger"];
+        self.profileImageUrl = newString;
     }
     
     return self;

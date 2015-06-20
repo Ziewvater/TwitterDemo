@@ -49,21 +49,6 @@
 
 #pragma mark UITableViewDelegate
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    ZWVTweetTableViewCell *calculationCell = self.calculationCell;
-//    if (calculationCell) {
-//        calculationCell = [tableView dequeueReusableCellWithIdentifier:@"TweetTableCell"];
-//        self.calculationCell = calculationCell;
-//    }
-//    [calculationCell setUpWithTweet:[self.searchResults objectAtIndex:indexPath.row]];
-//    
-//    calculationCell.bounds = CGRectMake(0.0f, 0.0f, CGRectGetWidth([UIScreen mainScreen].bounds), CGRectGetHeight(calculationCell.bounds));
-//    [calculationCell setNeedsLayout];
-//    [calculationCell layoutIfNeeded];
-//    
-//    CGFloat height = [calculationCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height;
-//    return height+1; // Add one point for the row separator
-//}
 
 #pragma mark - UISearchBarDelegate
 
