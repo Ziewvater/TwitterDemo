@@ -7,7 +7,6 @@
 //
 
 #import "ZWVLocationTweetTableViewCell.h"
-#import <MapKit/MapKit.h>
 
 CLLocationDistance ZWVDefaultRegionDistance = 10000;
 
@@ -16,20 +15,15 @@ CLLocationDistance ZWVDefaultRegionDistance = 10000;
 - (void)setUpWithTweet:(ZWVTweet *)tweet {
     [super setUpWithTweet:tweet];
     
-    MKMapSnapshotOptions *options = [[MKMapSnapshotOptions alloc] init];
-    options.region = MKCoordinateRegionMakeWithDistance(tweet.location, ZWVDefaultRegionDistance, ZWVDefaultRegionDistance);
-    options.showsPointsOfInterest = NO;
-    options.size = self.mapImageView.frame.size;
-    
     __weak __typeof(self)weakSelf = self;
-    MKMapSnapshotter *snapshotter = [[MKMapSnapshotter alloc] initWithOptions:options];
-    [snapshotter startWithCompletionHandler:^(MKMapSnapshot *snapshot, NSError *error) {
-        if (snapshot) {
-            weakSelf.mapImageView.image = snapshot.image;
-        } else if (error) {
-            NSLog(@"Error creating map snapshot for tweet: %@", tweet);
-        }
-    }];
+    [tweet mapImageForLocationWithSize:self.mapImageView.frame.size
+                      latitudeDistance:ZWVDefaultRegionDistance
+                     longitudeDistance:ZWVDefaultRegionDistance
+                            completion:^(UIImage *mapImage, NSError *error) {
+                                if (mapImage) {
+                                    weakSelf.mapImageView.image = mapImage;
+                                }
+                            }];
 }
 
 @end

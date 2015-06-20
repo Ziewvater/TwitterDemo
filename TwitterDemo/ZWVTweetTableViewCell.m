@@ -13,7 +13,13 @@
 
 - (void)setUpWithTweet:(ZWVTweet *)tweet {
     if (tweet.user) {
-        self.usernameLabel.text = tweet.user.username;
+        NSDictionary *displayNameAttributes =   @{NSFontAttributeName : [UIFont boldSystemFontOfSize:self.usernameLabel.font.pointSize]};
+        NSDictionary *screenNameAttributes =    @{NSFontAttributeName : [UIFont systemFontOfSize:self.usernameLabel.font.pointSize]};
+        NSMutableAttributedString *nameString = [[NSMutableAttributedString alloc] initWithString:tweet.user.username
+                                                                                       attributes:displayNameAttributes];
+        [nameString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" @%@",tweet.user.screenName]
+                                                                           attributes:screenNameAttributes]];
+        self.usernameLabel.attributedText = [nameString copy];
     }
     if (tweet.text) {
         self.tweetTextLabel.text = tweet.text;
