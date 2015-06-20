@@ -20,6 +20,17 @@
 
 @implementation ZWVMapSearchViewController
 
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    // Style find tweets button to make visible over map
+    self.findTweetsButton.backgroundColor = [UIColor whiteColor];
+    self.findTweetsButton.layer.cornerRadius = 4.0f;
+    self.findTweetsButton.layer.shadowColor = [UIColor blackColor].CGColor;
+    self.findTweetsButton.layer.shadowOffset = CGSizeMake(0, 2);
+    self.findTweetsButton.layer.shadowOpacity = 0.35f;
+}
+
 - (IBAction)findTweetsButtonTapped:(UIButton *)sender {
     [self findTweetsWithQuery:self.searchBar.text];
 }
@@ -90,6 +101,14 @@
     }
     [self.mapView addAnnotations:[newAnnotations copy]];
 }
+
+#pragma mark - UISearchBarDelegate
+
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    [searchBar resignFirstResponder];
+    [self findTweetsWithQuery:searchBar.text];
+}
+
 
 #pragma mark - MKMapViewDelegate
 
