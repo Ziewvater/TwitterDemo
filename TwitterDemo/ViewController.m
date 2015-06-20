@@ -62,8 +62,11 @@ NSString * const ZWVTwitterConsumerSecret = @"jLoCcwulOCLD2IY11Vs5U1KudJ77QFkqoJ
 }
 
 - (void)loggedIn {
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+//    UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Search"];
+//    [self.navigationController pushViewController:vc animated:YES];
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"Search"];
+    UIViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"MapSearch"];
     [self.navigationController pushViewController:vc animated:YES];
 }
 
