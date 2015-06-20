@@ -35,4 +35,9 @@ NSString * const ZWVTweetAttributeCoordinates = @"coordinates";
     return self;
 }
 
+- (BOOL)hasLocation {
+    // 'nil' locations will be initialized with (lat, long) of (0,0)
+    return (self.location.longitude == 0 && self.location.latitude == 0) ? NO : YES;
+}
+
 @end

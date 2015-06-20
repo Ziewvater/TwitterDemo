@@ -20,4 +20,6 @@
 
 - (instancetype)initWithDict:(NSDictionary *)jsonDict;
 
+- (BOOL)hasLocation;
+
 @end
