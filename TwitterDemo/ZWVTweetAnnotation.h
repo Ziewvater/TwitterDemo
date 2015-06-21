@@ -9,6 +9,9 @@
 #import <MapKit/MapKit.h>
 #import "ZWVTweet.h"
 
+/**
+ Annotation that represents a tweet. 
+ */
 @interface ZWVTweetAnnotation : MKPointAnnotation
 
 @property (strong, nonatomic) ZWVTweet *tweet;

@@ -9,6 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 
+/**
+ Users can search for tweets by map location in the Map Search View.
+ */
 @interface ZWVMapSearchViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UISearchBar *searchBar;
@@ -16,4 +19,5 @@
 @property (weak, nonatomic) IBOutlet UIButton *findTweetsButton;
 
 - (IBAction)findTweetsButtonTapped:(UIButton *)sender;
+
 @end

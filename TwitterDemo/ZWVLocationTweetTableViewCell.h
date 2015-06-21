@@ -8,6 +8,9 @@
 
 #import "ZWVTweetTableViewCell.h"
 
+/**
+ A table view cell that displays a tweet with a location.
+ */
 @interface ZWVLocationTweetTableViewCell : ZWVTweetTableViewCell
 
 @property (weak, nonatomic) IBOutlet UIImageView *mapImageView;

@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
+/**
+ Represents a Twitter user.
+ */
 @interface ZWVUser : NSObject
 
 /// Display name for the user

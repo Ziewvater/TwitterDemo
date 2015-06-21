@@ -11,15 +11,23 @@
 #import <CoreLocation/CoreLocation.h>
 #import "ZWVUser.h"
 
+/**
+ Represents a single status update from Twitter.
+ */
 @interface ZWVTweet : NSObject
 
+/// Date string for when the tweet was posted.
 @property (strong, nonatomic) NSString *createdDateString;
+/// Body text of the tweet.
 @property (strong, nonatomic) NSString *text;
 
+/// Location the tweet originated from. Check `-hasLocation` before using this property.
 @property (nonatomic) CLLocationCoordinate2D location;
 
+/// User that posted the tweet.
 @property (strong, nonatomic) ZWVUser *user;
 
+/// Creates and returns a ZWVTweet object with JSON returned from the server.
 - (instancetype)initWithDict:(NSDictionary *)jsonDict;
 
 /**
