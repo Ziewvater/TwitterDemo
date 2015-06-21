@@ -7,7 +7,7 @@
 //
 
 #import "ZWVSearchViewController.h"
-#import "AppDelegate.h"
+#import "ZWVTwitterHandler.h"
 #import "ZWVTweet.h"
 #import "ZWVTweetTableViewCell.h"
 
@@ -26,6 +26,28 @@
     
     self.tableView.estimatedRowHeight = 67.0f;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
+    self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    ZWVTwitterHandler *twitter = [ZWVTwitterHandler shared];
+    if (!twitter.twitterAPI) {
+        self.searchBar.userInteractionEnabled = NO;
+        __weak __typeof(self)weakSelf = self;
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Grant access to Twitter accounts"
+                                                                                 message:@"This app requires access to your stored Twitter accounts. Please grant access to your Twitter accounts to use the app. Don't worry, we won't tweet from your account or anything like that."
+                                                                          preferredStyle:UIAlertControllerStyleAlert];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            [twitter performReverseAuthentication:^(STTwitterAPI *twitterAPI) {
+                weakSelf.searchBar.userInteractionEnabled = YES;
+            } errorHandler:^(NSError *error) {
+                //
+            }];
+        }]];
+        [self presentViewController:alertController animated:YES completion:nil];
+    }
 }
 
 #pragma mark - UITableView
@@ -62,9 +84,8 @@
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     __weak __typeof(self)weakSelf = self;
-    [appDelegate.twitterAPI getSearchTweetsWithQuery:searchBar.text
+    [[ZWVTwitterHandler shared].twitterAPI getSearchTweetsWithQuery:searchBar.text
                                         successBlock:^(NSDictionary *searchMetadata, NSArray *statuses) {
                                             NSMutableArray *tweets = [NSMutableArray new];
                                             for (NSDictionary *dict in statuses) {

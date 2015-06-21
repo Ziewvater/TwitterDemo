@@ -7,7 +7,7 @@
 //
 
 #import "ZWVMapSearchViewController.h"
-#import "AppDelegate.h"
+#import "ZWVTwitterHandler.h"
 #import "ZWVTweet.h"
 #import "ZWVTweetAnnotation.h"
 
@@ -37,10 +37,9 @@
 
 - (void)findTweetsWithQuery:(NSString *)query {
     
-    AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     __weak __typeof(self)weakSelf = self;
     NSString *mapGeocode = [self geocodeStringFromMap];
-    [appDelegate.twitterAPI getSearchTweetsWithQuery:query ? query : @""
+    [[ZWVTwitterHandler shared].twitterAPI getSearchTweetsWithQuery:query ? query : @""
                                              geocode:mapGeocode
                                                 lang:nil
                                               locale:nil
