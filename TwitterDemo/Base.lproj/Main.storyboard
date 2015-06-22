@@ -5,7 +5,7 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Item-->
+        <!--Search-->
         <scene sceneID="N8g-0b-2kN">
             <objects>
                 <viewController storyboardIdentifier="Search" automaticallyAdjustsScrollViewInsets="NO" id="CVo-Ig-0MI" customClass="ZWVSearchViewController" sceneMemberID="viewController">
@@ -171,7 +171,7 @@
                             </mask>
                         </variation>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="hTn-QZ-fDh"/>
+                    <tabBarItem key="tabBarItem" title="Search" image="SearchIcon" id="hTn-QZ-fDh"/>
                     <connections>
                         <outlet property="searchBar" destination="1lt-NZ-RT0" id="OJq-QJ-eOy"/>
                         <outlet property="tableView" destination="Bgb-j6-bx9" id="31r-kZ-GX0"/>
@@ -181,7 +181,7 @@
             </objects>
             <point key="canvasLocation" x="2726" y="327"/>
         </scene>
-        <!--Item-->
+        <!--Map-->
         <scene sceneID="21H-qV-QHM">
             <objects>
                 <viewController storyboardIdentifier="MapSearch" id="5ia-cS-Gcz" customClass="ZWVMapSearchViewController" sceneMemberID="viewController">
@@ -240,7 +240,7 @@
                             </mask>
                         </variation>
                     </view>
-                    <tabBarItem key="tabBarItem" title="Item" id="nfr-IP-46k"/>
+                    <tabBarItem key="tabBarItem" title="Map" image="MapSearchIcon" id="nfr-IP-46k"/>
                     <connections>
                         <outlet property="findTweetsButton" destination="IWJ-Pb-ghZ" id="ipN-YP-0Dc"/>
                         <outlet property="mapView" destination="He8-au-j7W" id="Lyx-kO-5Q5"/>
@@ -271,4 +271,8 @@
             <point key="canvasLocation" x="1914" y="680"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="MapSearchIcon" width="25" height="25"/>
+        <image name="SearchIcon" width="25" height="25"/>
+    </resources>
 </document>
