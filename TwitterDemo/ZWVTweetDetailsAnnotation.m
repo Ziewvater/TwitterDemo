@@ -23,6 +23,10 @@
 @end
 
 CGFloat MKPinAnnotationViewHeight = 39.0f;
+CGFloat ZWVTweetDetailsMaxWidth = 300.f;
+CGFloat ZWVTweetDetailsLabelEstimatedheight = 20.0f;
+CGFloat ZWVTweetDetailsInterLabelSpacing = 4.0f;
+CGFloat ZWVTweetDetailsBorderBuffer = 8.0f;
 
 @implementation ZWVTweetDetailsAnnotationView
 
@@ -34,8 +38,9 @@ CGFloat MKPinAnnotationViewHeight = 39.0f;
     self.layer.borderColor = [UIColor darkGrayColor].CGColor;
     self.layer.borderWidth = 1.0f;
     
-    UILabel *nameLabel = [[UILabel alloc] init];
-    UILabel *tweetLabel = [[UILabel alloc] init];
+    // Set up information display views
+    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(ZWVTweetDetailsBorderBuffer, ZWVTweetDetailsBorderBuffer, ZWVTweetDetailsMaxWidth, ZWVTweetDetailsLabelEstimatedheight)];
+    UILabel *tweetLabel = [[UILabel alloc] initWithFrame:CGRectMake(ZWVTweetDetailsBorderBuffer, CGRectGetMaxY(nameLabel.frame) + ZWVTweetDetailsInterLabelSpacing, ZWVTweetDetailsMaxWidth, ZWVTweetDetailsLabelEstimatedheight)];
     tweetLabel.numberOfLines = 0;
     tweetLabel.lineBreakMode = NSLineBreakByWordWrapping;
     
@@ -59,8 +64,20 @@ CGFloat MKPinAnnotationViewHeight = 39.0f;
     self.nameLabel.attributedText = nameString;
     self.tweetTextLabel.text = annotation.tweet.text;
     
-    [self setNeedsLayout];
-    [self layoutIfNeeded];
+    
+    CGSize sizeToFitTo = CGSizeMake(ZWVTweetDetailsMaxWidth, CGFLOAT_MAX);
+    CGSize nameFittingRect = [self.nameLabel sizeThatFits:sizeToFitTo];
+    CGSize textFittingRect = [self.tweetTextLabel sizeThatFits:sizeToFitTo];
+    
+    CGRect newNameFrame = CGRectMake(ZWVTweetDetailsBorderBuffer, ZWVTweetDetailsBorderBuffer, nameFittingRect.width, nameFittingRect.height);
+    CGRect newTextFrame = CGRectMake(ZWVTweetDetailsBorderBuffer, CGRectGetMaxY(newNameFrame) + ZWVTweetDetailsInterLabelSpacing, textFittingRect.width, textFittingRect.height);
+    
+    self.nameLabel.frame = newNameFrame;
+    self.tweetTextLabel.frame = newTextFrame;
+    
+    CGRect selfFittingFrame = CGRectUnion(newNameFrame, newTextFrame);
+    selfFittingFrame.origin = CGPointZero;
+    [self setFrame:CGRectInset(selfFittingFrame, -ZWVTweetDetailsBorderBuffer, -ZWVTweetDetailsBorderBuffer)];
     
     self.centerOffset = CGPointMake(0, -(CGRectGetMidY(self.bounds) + MKPinAnnotationViewHeight));
 }
