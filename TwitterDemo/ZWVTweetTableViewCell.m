@@ -22,7 +22,31 @@
         self.usernameLabel.attributedText = [nameString copy];
     }
     if (tweet.text) {
-        self.tweetTextLabel.text = tweet.text;
+        if (self.highlightPhrase) {
+            // Find all the locations of the highlighted phrase
+            NSMutableArray *locations = [NSMutableArray new];
+            NSRange searchRange = NSMakeRange(0, [tweet.text length]);
+            NSRange foundRange = [tweet.text rangeOfString:self.highlightPhrase options:NSCaseInsensitiveSearch range:searchRange];
+            while (foundRange.location != NSNotFound) {
+                [locations addObject:[NSValue valueWithRange:foundRange]];
+                searchRange.location = foundRange.location + foundRange.length;
+                searchRange.length = tweet.text.length - searchRange.location;
+                foundRange = [tweet.text rangeOfString:self.highlightPhrase options:NSCaseInsensitiveSearch range:searchRange];
+            }
+            
+            NSDictionary *highlightedAttributes = @{NSFontAttributeName : [UIFont boldSystemFontOfSize:self.tweetTextLabel.font.pointSize]};
+            NSDictionary *normalTextAttributes = @{NSFontAttributeName : [UIFont systemFontOfSize:self.tweetTextLabel.font.pointSize]};
+            NSMutableAttributedString *tweetText = [[NSMutableAttributedString alloc] initWithString:tweet.text
+                                                                                          attributes:normalTextAttributes];
+
+            // Set bold font for all ranges of highlighted phrase
+            for (NSValue *rangeValue in locations) {
+                [tweetText setAttributes:highlightedAttributes range:[rangeValue rangeValue]];
+            }
+            self.tweetTextLabel.attributedText = tweetText;
+        } else {
+            self.tweetTextLabel.text = tweet.text;
+        }
     }
     if (tweet.user.profileImageUrl) {
         self.avatarImageView.alpha = 0;

@@ -20,6 +20,7 @@
 @property (weak, nonatomic) IBOutlet UIImageView *avatarImageView;
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet UILabel *tweetTextLabel;
+@property (strong, nonatomic) NSString *highlightPhrase;
 
 - (void)setUpWithTweet:(ZWVTweet *)tweet;
 

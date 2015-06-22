@@ -13,6 +13,7 @@
 
 @interface ZWVSearchViewController()
 
+@property (strong, nonatomic) NSString *searchTerm; // Hold on to search term in case user changes string in search bar without starting new search
 @property (strong, nonatomic) NSArray *searchResults; // [ZWVTweet]
 
 @property (strong, nonatomic) ZWVTweetTableViewCell *calculationCell;
@@ -71,6 +72,7 @@
     if ([cell isKindOfClass:[ZWVTweetTableViewCell class]]) {
         ZWVTweetTableViewCell *tweetCell = (ZWVTweetTableViewCell *)cell;
         [tweetCell setUpWithTweet:tweet];
+        tweetCell.highlightPhrase = self.searchTerm;
         return tweetCell;
     }
     return nil;
@@ -85,6 +87,7 @@
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
     __weak __typeof(self)weakSelf = self;
+    self.searchTerm = searchBar.text;
     [[ZWVTwitterHandler shared].twitterAPI getSearchTweetsWithQuery:searchBar.text
                                         successBlock:^(NSDictionary *searchMetadata, NSArray *statuses) {
                                             NSMutableArray *tweets = [NSMutableArray new];
