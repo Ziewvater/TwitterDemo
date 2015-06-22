@@ -28,6 +28,7 @@
     [super viewDidLoad];
     
     self.searchBar.placeholder = @"Search tweets by keyword";
+    self.searchBar.showsCancelButton = YES;
     
     self.tableView.estimatedRowHeight = 67.0f;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
@@ -39,6 +40,7 @@
     
     ZWVTwitterHandler *twitter = [ZWVTwitterHandler shared];
     if (!twitter.twitterAPI) {
+        self.searchBar.userInteractionEnabled = NO; // Disable to prevent searching without authorization
         if ([[[[ACAccountStore alloc] init] accountTypeWithAccountTypeIdentifier: ACAccountTypeIdentifierTwitter] accessGranted]) {
             // The user has already granted access to Twitter accounts, authorize
             __weak __typeof(self)weakSelf = self;
@@ -49,7 +51,6 @@
             }];
         } else {
             // Not yet given access to accounts, prepare user for giving access before authorizing
-            self.searchBar.userInteractionEnabled = NO;
             __weak __typeof(self)weakSelf = self;
             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Grant access to Twitter accounts"
                                                                                      message:@"This app requires access to your stored Twitter accounts. Please grant access to your Twitter accounts to use the app. Don't worry, we won't tweet from your account or anything like that."
@@ -61,6 +62,7 @@
                     if ([error.domain isEqualToString:@"STTwitterOS"]) {
                         if (error.code == STTwitterOSSystemCannotAccessTwitter
                             || error.code == STTwitterOSNoTwitterAccountIsAvailable) {
+                            // Sometimes "CannotAccessTwitter" error is thrown when user hasn't yet stored a twitter account in iOS
                             UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Couldn't Access Twitter"
                                                                                                      message:@"We couln't reach Twitter. Please make sure you have a Twitter account stored on this device and try again." preferredStyle:UIAlertControllerStyleAlert];
                             [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
@@ -86,9 +88,7 @@
     }
 }
 
-#pragma mark - UITableView
-
-#pragma mark UITableViewDataSource
+#pragma mark - UITableViewDataSource
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.searchResults.count;
@@ -113,10 +113,6 @@
     return nil;
 }
 
-
-#pragma mark UITableViewDelegate
-
-
 #pragma mark - UISearchBarDelegate
 
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
@@ -135,6 +131,10 @@
                                           errorBlock:^(NSError *error) {
                                               NSLog(@"Error searching tweets: %@", error);
                                           }];
+}
+
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    [searchBar resignFirstResponder];
 }
 
 @end

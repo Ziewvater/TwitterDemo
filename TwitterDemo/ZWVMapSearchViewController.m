@@ -26,6 +26,7 @@
     [super viewDidLoad];
     
     self.searchBar.placeholder = @"Filter results by text";
+    self.searchBar.showsCancelButton = YES;
     
     // Style find tweets button to make visible over map
     self.findTweetsButton.backgroundColor = [UIColor whiteColor];
@@ -117,6 +118,9 @@
     [self findTweetsWithQuery:searchBar.text];
 }
 
+- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    [searchBar resignFirstResponder];
+}
 
 #pragma mark - MKMapViewDelegate
 
