@@ -8,6 +8,7 @@
 
 #import "ZWVTwitterHandler.h"
 #import <UIKit/UIKit.h>
+#import <STTwitter/STTwitterOS.h>
 
 NSString * const ZWVTwitterConsumerKey = @"hANqfzJFoKWLLrmEJPXyDysVe";
 NSString * const ZWVTwitterConsumerSecret = @"jLoCcwulOCLD2IY11Vs5U1KudJ77QFkqoJzecsH27MzS3yKw3g";
@@ -51,6 +52,15 @@ NSString * const ZWVTwitterConsumerSecret = @"jLoCcwulOCLD2IY11Vs5U1KudJ77QFkqoJ
                                         errorBlock:^(NSError *error) {
                                             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
                                             NSLog(@"Failed to verify; %@", error);
+                                            if ([error.domain isEqualToString:@"STTwitterOS"]) {
+                                                if (error.code == STTwitterOSSystemCannotAccessTwitter) {
+                                                    NSLog(@"Device can't access Twitter. Either device doesn't have Twitter account capabilities, or the user hasn't yet added an account.");
+                                                } else if (error.code == STTwitterOSUserDeniedAccessToTheirAccounts) {
+                                                    NSLog(@"User has denied access to Twitter accounts");
+                                                } else if (error.code == STTwitterOSNoTwitterAccountIsAvailable) {
+                                                    NSLog(@"User doesn't have a Twitter account stored on device");
+                                                }
+                                            }
                                             if (errorHandler) {
                                                 errorHandler(error);
                                             }

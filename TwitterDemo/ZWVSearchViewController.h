@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+/**
+ Users can search for tweets by text query using this view.
+ */
 @interface ZWVSearchViewController : UIViewController
 <
 UISearchBarDelegate

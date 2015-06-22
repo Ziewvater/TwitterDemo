@@ -10,6 +10,8 @@
 #import "ZWVTwitterHandler.h"
 #import "ZWVTweet.h"
 #import "ZWVTweetTableViewCell.h"
+@import Accounts;
+#import <STTwitter/STTwitterOS.h>
 
 @interface ZWVSearchViewController()
 
@@ -25,6 +27,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.searchBar.placeholder = @"Search tweets by keyword";
+    
     self.tableView.estimatedRowHeight = 67.0f;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     self.tableView.keyboardDismissMode = UIScrollViewKeyboardDismissModeInteractive;
@@ -35,19 +39,50 @@
     
     ZWVTwitterHandler *twitter = [ZWVTwitterHandler shared];
     if (!twitter.twitterAPI) {
-        self.searchBar.userInteractionEnabled = NO;
-        __weak __typeof(self)weakSelf = self;
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Grant access to Twitter accounts"
-                                                                                 message:@"This app requires access to your stored Twitter accounts. Please grant access to your Twitter accounts to use the app. Don't worry, we won't tweet from your account or anything like that."
-                                                                          preferredStyle:UIAlertControllerStyleAlert];
-        [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        if ([[[[ACAccountStore alloc] init] accountTypeWithAccountTypeIdentifier: ACAccountTypeIdentifierTwitter] accessGranted]) {
+            // The user has already granted access to Twitter accounts, authorize
+            __weak __typeof(self)weakSelf = self;
             [twitter performReverseAuthentication:^(STTwitterAPI *twitterAPI) {
                 weakSelf.searchBar.userInteractionEnabled = YES;
             } errorHandler:^(NSError *error) {
                 //
             }];
-        }]];
-        [self presentViewController:alertController animated:YES completion:nil];
+        } else {
+            // Not yet given access to accounts, prepare user for giving access before authorizing
+            self.searchBar.userInteractionEnabled = NO;
+            __weak __typeof(self)weakSelf = self;
+            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Grant access to Twitter accounts"
+                                                                                     message:@"This app requires access to your stored Twitter accounts. Please grant access to your Twitter accounts to use the app. Don't worry, we won't tweet from your account or anything like that."
+                                                                              preferredStyle:UIAlertControllerStyleAlert];
+            [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                [twitter performReverseAuthentication:^(STTwitterAPI *twitterAPI) {
+                    weakSelf.searchBar.userInteractionEnabled = YES;
+                } errorHandler:^(NSError *error) {
+                    if ([error.domain isEqualToString:@"STTwitterOS"]) {
+                        if (error.code == STTwitterOSSystemCannotAccessTwitter
+                            || error.code == STTwitterOSNoTwitterAccountIsAvailable) {
+                            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Couldn't Access Twitter"
+                                                                                                     message:@"We couln't reach Twitter. Please make sure you have a Twitter account stored on this device and try again." preferredStyle:UIAlertControllerStyleAlert];
+                            [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+                            [weakSelf presentViewController:alertController animated:YES completion:nil];
+                        } else if (error.code == STTwitterOSUserDeniedAccessToTheirAccounts) {
+                            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Please Grant Access"
+                                                                                                     message:@"TwitterDemo can't work without Twitter access. Please grant TwitterDemo access to your Twitter accounts." preferredStyle:UIAlertControllerStyleAlert];
+                            [alertController addAction:[UIAlertAction actionWithTitle:@"Not Now" style:UIAlertActionStyleCancel handler:nil]];
+                            [alertController addAction:[UIAlertAction actionWithTitle:@"Settings" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+                                [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                            }]];
+                            [weakSelf presentViewController:alertController animated:YES completion:nil];
+                        } else {
+                            UIAlertController * alertController = [UIAlertController alertControllerWithTitle:@"Error Logging In" message:@"We couldn't log in to Twitter." preferredStyle:UIAlertControllerStyleAlert];
+                                                                   [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:nil]];
+                            [weakSelf presentViewController:alertController animated:YES completion:nil];
+                        }
+                    }
+                }];
+            }]];
+            [self presentViewController:alertController animated:YES completion:nil];
+        }
     }
 }
 
