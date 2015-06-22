@@ -10,11 +10,13 @@
 #import "ZWVTwitterHandler.h"
 #import "ZWVTweet.h"
 #import "ZWVTweetAnnotation.h"
+#import "ZWVTweetDetailsAnnotation.h"
 
 @interface ZWVMapSearchViewController()
 <MKMapViewDelegate>
 
 @property (strong, nonatomic) NSArray *searchResults; // [ZWVTweet]
+@property (strong, nonatomic) ZWVTweetDetailsAnnotation *displayedDetails;
 
 @end
 
@@ -112,19 +114,48 @@
 #pragma mark - MKMapViewDelegate
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id <MKAnnotation>)annotation {
-    NSString *identifier = @"tweet";
-    MKPinAnnotationView *pin;
-    MKAnnotationView *dequeuedView = [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
-    if ([dequeuedView isKindOfClass:[MKPinAnnotationView class]]) {
-        pin = (MKPinAnnotationView *)dequeuedView;
-        pin.annotation = annotation;
+    if ([annotation isKindOfClass:[ZWVTweetAnnotation class]]) {
+        NSString *identifier = @"tweet";
+        MKPinAnnotationView *pin;
+        MKAnnotationView *dequeuedView = [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+        if ([dequeuedView isKindOfClass:[MKPinAnnotationView class]]) {
+            pin = (MKPinAnnotationView *)dequeuedView;
+            pin.annotation = annotation;
+        } else {
+            pin = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
+        }
+        return pin;
+    } else if ([annotation isKindOfClass:[ZWVTweetDetailsAnnotation class]]) {
+        NSString *identifier = @"tweetDetails";
+        ZWVTweetDetailsAnnotationView *detailsView;
+        MKAnnotationView *dequeuedView = [mapView dequeueReusableAnnotationViewWithIdentifier:identifier];
+        if ([dequeuedView isKindOfClass:[ZWVTweetDetailsAnnotationView class]]) {
+            detailsView = (ZWVTweetDetailsAnnotationView *)dequeuedView;
+            detailsView.annotation = annotation;
+        } else {
+            detailsView = [[ZWVTweetDetailsAnnotationView alloc] initWithTweetAnnotation:(ZWVTweetDetailsAnnotation *)annotation reuseIdentifier:identifier];
+        }
+        return detailsView;
     } else {
-        pin = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:identifier];
-        pin.canShowCallout = YES;
+        return nil;
     }
-    return pin;
 }
 
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
+    if ([view.annotation isKindOfClass:[ZWVTweetAnnotation class]]) {
+        ZWVTweetAnnotation *tweetAnnotation = (ZWVTweetAnnotation *)view.annotation;
+        ZWVTweetDetailsAnnotation *details = [[ZWVTweetDetailsAnnotation alloc] initWithTweet:tweetAnnotation.tweet];
+        __weak __typeof(self)weakSelf = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [mapView addAnnotation:details];
+            weakSelf.displayedDetails = details;
+        });
+    }
+}
 
+- (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
+    [mapView removeAnnotation:self.displayedDetails];
+    self.displayedDetails = nil;
+}
 
 @end
