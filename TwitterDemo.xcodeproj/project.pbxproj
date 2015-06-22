@@ -112,27 +112,10 @@
 		6158C1F11B33302A008F1C48 /* TwitterDemo */ = {
 			isa = PBXGroup;
 			children = (
-				61773D0E1B3651BE0083B24D /* ZWVTweetDetailsAnnotation.h */,
-				61773D0F1B3651BE0083B24D /* ZWVTweetDetailsAnnotation.m */,
-				61773D081B3600D80083B24D /* ZWVTweetAnnotation.h */,
-				61773D091B3600D80083B24D /* ZWVTweetAnnotation.m */,
-				61773D0B1B3609F00083B24D /* ZWVTwitterHandler.h */,
-				61773D0C1B3609F00083B24D /* ZWVTwitterHandler.m */,
-				61773D051B35ED8A0083B24D /* ZWVMapSearchViewController.h */,
-				61773D061B35ED8A0083B24D /* ZWVMapSearchViewController.m */,
-				61773D021B352A460083B24D /* ZWVLocationTweetTableViewCell.h */,
-				61773D031B352A460083B24D /* ZWVLocationTweetTableViewCell.m */,
-				61773CFF1B350BE30083B24D /* ZWVUser.h */,
-				61773D001B350BE30083B24D /* ZWVUser.m */,
-				61773CFC1B3491F90083B24D /* ZWVTweet.h */,
-				61773CFD1B3491F90083B24D /* ZWVTweet.m */,
-				6158C1F61B33302A008F1C48 /* AppDelegate.h */,
-				6158C1F71B33302A008F1C48 /* AppDelegate.m */,
+				61773D121B37F8E80083B24D /* View Controller */,
+				61773D131B37F9040083B24D /* View */,
+				61773D111B37F8DD0083B24D /* Model */,
 				6158C1FC1B33302A008F1C48 /* Main.storyboard */,
-				61773CF91B3483200083B24D /* ZWVTweetTableViewCell.h */,
-				61773CFA1B3483200083B24D /* ZWVTweetTableViewCell.m */,
-				61773CF61B3481F40083B24D /* ZWVSearchViewController.h */,
-				61773CF71B3481F40083B24D /* ZWVSearchViewController.m */,
 				6158C1FF1B33302A008F1C48 /* Images.xcassets */,
 				6158C2011B33302A008F1C48 /* LaunchScreen.xib */,
 				6158C1F21B33302A008F1C48 /* Supporting Files */,
@@ -164,6 +147,47 @@
 				6158C20D1B33302A008F1C48 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		61773D111B37F8DD0083B24D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				61773D0B1B3609F00083B24D /* ZWVTwitterHandler.h */,
+				61773D0C1B3609F00083B24D /* ZWVTwitterHandler.m */,
+				61773CFF1B350BE30083B24D /* ZWVUser.h */,
+				61773D001B350BE30083B24D /* ZWVUser.m */,
+				61773CFC1B3491F90083B24D /* ZWVTweet.h */,
+				61773CFD1B3491F90083B24D /* ZWVTweet.m */,
+				61773D0E1B3651BE0083B24D /* ZWVTweetDetailsAnnotation.h */,
+				61773D0F1B3651BE0083B24D /* ZWVTweetDetailsAnnotation.m */,
+				61773D081B3600D80083B24D /* ZWVTweetAnnotation.h */,
+				61773D091B3600D80083B24D /* ZWVTweetAnnotation.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
+		61773D121B37F8E80083B24D /* View Controller */ = {
+			isa = PBXGroup;
+			children = (
+				6158C1F61B33302A008F1C48 /* AppDelegate.h */,
+				6158C1F71B33302A008F1C48 /* AppDelegate.m */,
+				61773D051B35ED8A0083B24D /* ZWVMapSearchViewController.h */,
+				61773D061B35ED8A0083B24D /* ZWVMapSearchViewController.m */,
+				61773CF61B3481F40083B24D /* ZWVSearchViewController.h */,
+				61773CF71B3481F40083B24D /* ZWVSearchViewController.m */,
+			);
+			name = "View Controller";
+			sourceTree = "<group>";
+		};
+		61773D131B37F9040083B24D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				61773D021B352A460083B24D /* ZWVLocationTweetTableViewCell.h */,
+				61773D031B352A460083B24D /* ZWVLocationTweetTableViewCell.m */,
+				61773CF91B3483200083B24D /* ZWVTweetTableViewCell.h */,
+				61773CFA1B3483200083B24D /* ZWVTweetTableViewCell.m */,
+			);
+			name = View;
 			sourceTree = "<group>";
 		};
 		BC4EFE1B0F59C1CC60BAD923 /* Frameworks */ = {
