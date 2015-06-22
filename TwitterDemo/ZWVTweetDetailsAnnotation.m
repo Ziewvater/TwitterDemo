@@ -55,6 +55,7 @@ CGFloat ZWVTweetDetailsBorderBuffer = 8.0f;
 }
 
 - (void)setAppearanceForTweetAnnotation:(ZWVTweetDetailsAnnotation *)annotation {
+    // Show display name in bold, screen name in normal weight
     NSDictionary *displayNameAttributes =   @{NSFontAttributeName : [UIFont boldSystemFontOfSize:[UIFont systemFontSize]]};
     NSDictionary *screenNameAttributes =    @{NSFontAttributeName : [UIFont systemFontOfSize:[UIFont systemFontSize]]};
     NSMutableAttributedString *nameString = [[NSMutableAttributedString alloc] initWithString:annotation.tweet.user.username
@@ -62,8 +63,32 @@ CGFloat ZWVTweetDetailsBorderBuffer = 8.0f;
     [nameString appendAttributedString:[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@" @%@", annotation.tweet.user.screenName]
                                                                        attributes:screenNameAttributes]];
     self.nameLabel.attributedText = nameString;
-    self.tweetTextLabel.text = annotation.tweet.text;
     
+    if (annotation.highlightPhrase) {
+        // Find all the locations of the highlighted phrase
+        NSMutableArray *locations = [NSMutableArray new];
+        NSRange searchRange = NSMakeRange(0, [annotation.tweet.text length]);
+        NSRange foundRange = [annotation.tweet.text rangeOfString:annotation.highlightPhrase options:NSCaseInsensitiveSearch range:searchRange];
+        while (foundRange.location != NSNotFound) {
+            [locations addObject:[NSValue valueWithRange:foundRange]];
+            searchRange.location = foundRange.location + foundRange.length;
+            searchRange.length = annotation.tweet.text.length - searchRange.location;
+            foundRange = [annotation.tweet.text rangeOfString:annotation.highlightPhrase options:NSCaseInsensitiveSearch range:searchRange];
+        }
+        
+        NSDictionary *highlightedAttributes = @{NSFontAttributeName : [UIFont boldSystemFontOfSize:self.tweetTextLabel.font.pointSize]};
+        NSDictionary *normalTextAttributes = @{NSFontAttributeName : [UIFont systemFontOfSize:self.tweetTextLabel.font.pointSize]};
+        NSMutableAttributedString *tweetText = [[NSMutableAttributedString alloc] initWithString:annotation.tweet.text
+                                                                                      attributes:normalTextAttributes];
+        
+        // Set bold font for all ranges of highlighted phrase
+        for (NSValue *rangeValue in locations) {
+            [tweetText setAttributes:highlightedAttributes range:[rangeValue rangeValue]];
+        }
+        self.tweetTextLabel.attributedText = tweetText;
+    } else {
+        self.tweetTextLabel.text = annotation.tweet.text;
+    }
     
     CGSize sizeToFitTo = CGSizeMake(ZWVTweetDetailsMaxWidth, CGFLOAT_MAX);
     CGSize nameFittingRect = [self.nameLabel sizeThatFits:sizeToFitTo];

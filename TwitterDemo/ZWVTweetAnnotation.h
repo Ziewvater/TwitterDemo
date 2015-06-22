@@ -15,6 +15,7 @@
 @interface ZWVTweetAnnotation : MKPointAnnotation
 
 @property (strong, nonatomic) ZWVTweet *tweet;
+@property (strong, nonatomic) NSString *highlightPhrase;
 
 - (instancetype)initWithTweet:(ZWVTweet *)tweet;
 

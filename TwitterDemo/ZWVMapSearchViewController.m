@@ -98,6 +98,7 @@
     NSMutableArray *newAnnotations = [NSMutableArray new];
     for (ZWVTweet *tweet in self.searchResults) {
         ZWVTweetAnnotation *annotation = [[ZWVTweetAnnotation alloc] initWithTweet:tweet];
+        annotation.highlightPhrase = self.searchBar.text;
         [newAnnotations addObject:annotation];
     }
     [self.mapView addAnnotations:[newAnnotations copy]];
@@ -145,6 +146,7 @@
     if ([view.annotation isKindOfClass:[ZWVTweetAnnotation class]]) {
         ZWVTweetAnnotation *tweetAnnotation = (ZWVTweetAnnotation *)view.annotation;
         ZWVTweetDetailsAnnotation *details = [[ZWVTweetDetailsAnnotation alloc] initWithTweet:tweetAnnotation.tweet];
+        details.highlightPhrase = tweetAnnotation.highlightPhrase;
         __weak __typeof(self)weakSelf = self;
         dispatch_async(dispatch_get_main_queue(), ^{
             [mapView addAnnotation:details];
