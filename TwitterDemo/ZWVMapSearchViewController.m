@@ -25,12 +25,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.searchBar.placeholder = @"Filter results by text";
+    
     // Style find tweets button to make visible over map
     self.findTweetsButton.backgroundColor = [UIColor whiteColor];
     self.findTweetsButton.layer.cornerRadius = 4.0f;
     self.findTweetsButton.layer.shadowColor = [UIColor blackColor].CGColor;
     self.findTweetsButton.layer.shadowOffset = CGSizeMake(0, 2);
     self.findTweetsButton.layer.shadowOpacity = 0.35f;
+    
+    // Center map on Portland
+    MKCoordinateRegion initialRegion = MKCoordinateRegionMakeWithDistance(CLLocationCoordinate2DMake(45.525, -122.67), 5000, 5000);
+    [self.mapView setRegion:initialRegion];
 }
 
 - (IBAction)findTweetsButtonTapped:(UIButton *)sender {
@@ -158,6 +164,11 @@
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
     [mapView removeAnnotation:self.displayedDetails];
     self.displayedDetails = nil;
+}
+
+- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
+    // Dismiss keyboard. No other intuitive way offered yet.
+    [self.searchBar resignFirstResponder];
 }
 
 @end
