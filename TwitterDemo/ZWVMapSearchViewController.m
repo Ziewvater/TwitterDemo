@@ -26,7 +26,6 @@
     [super viewDidLoad];
     
     self.searchBar.placeholder = @"Filter results by text";
-    self.searchBar.showsCancelButton = YES;
     
     // Style find tweets button to make visible over map
     self.findTweetsButton.backgroundColor = [UIColor whiteColor];
@@ -113,13 +112,38 @@
 
 #pragma mark - UISearchBarDelegate
 
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    [searchBar setShowsCancelButton:YES animated:YES];
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    if (searchBar.text.length == 0) {
+        [searchBar setShowsCancelButton:NO animated:YES];
+    } else {
+        // Enable the search bar cancel button to allow users to cancel without bringing up the keyboard
+        for (UIView *view in searchBar.subviews){
+            for (id subview in view.subviews){
+                if ([subview isKindOfClass:[UIButton class]]){
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 10), dispatch_get_main_queue(), ^{
+                        [subview setEnabled:YES];
+                    });
+                    return;
+                }
+            }
+        }
+    }
+}
+
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
     [self findTweetsWithQuery:searchBar.text];
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    // Clear search and hide cancel button
+    searchBar.text = nil;
     [searchBar resignFirstResponder];
+    [searchBar setShowsCancelButton:NO animated:YES];
 }
 
 #pragma mark - MKMapViewDelegate
