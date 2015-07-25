@@ -28,7 +28,6 @@
     [super viewDidLoad];
     
     self.searchBar.placeholder = @"Search tweets by keyword";
-    self.searchBar.showsCancelButton = YES;
     
     self.tableView.estimatedRowHeight = 67.0f;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
@@ -115,6 +114,14 @@
 
 #pragma mark - UISearchBarDelegate
 
+- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+    [searchBar setShowsCancelButton:YES animated:YES];
+}
+
+- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
+    [searchBar setShowsCancelButton:NO animated:YES];
+}
+
 - (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
     [searchBar resignFirstResponder];
     __weak __typeof(self)weakSelf = self;
@@ -134,7 +141,9 @@
 }
 
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
+    searchBar.text = nil;
     [searchBar resignFirstResponder];
+    [searchBar setShowsCancelButton:NO animated:YES];
 }
 
 @end
